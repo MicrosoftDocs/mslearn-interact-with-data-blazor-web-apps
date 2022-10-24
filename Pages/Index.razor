@@ -12,25 +12,22 @@
                 <li style="background-image: url('@special.ImageUrl')">
                     <div class="pizza-info">
                         <span class="title">@special.Name</span>
-                            @special.Description
-                            <span class="price">@special.GetFormattedBasePrice()</span>
+                        @special.Description
+                        <span class="price">@special.GetFormattedBasePrice()</span>
                     </div>
                 </li>
             }
         }
-  </ul>
+    </ul>
 </div>
 
 
 @code {
 
     List<PizzaSpecial> specials = new();
-       protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        specials = await HttpClient
-            .GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
+        specials =
+        await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
     }
 }
-
-
-
