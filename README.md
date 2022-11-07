@@ -1,7 +1,7 @@
 
 # mslearn-interact-with-data-blazor-web-apps 
 
-This project is made for training purposes with Blazor Server. 
+This project is made for training purposes with Blazor Server. This is in the form of a pizza ordering app.
 
 # Legal Notices
 
