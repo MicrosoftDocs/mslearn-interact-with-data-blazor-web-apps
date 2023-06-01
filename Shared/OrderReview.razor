@@ -1,0 +1,21 @@
+﻿@foreach (var pizza in Order.Pizzas)
+{
+    <p>
+        <strong>
+            @(pizza.Size)"
+            @pizza.Special.Name
+            (£@pizza.GetFormattedTotalPrice())
+        </strong>
+    </p>
+}
+
+<p>
+    <strong>
+        Total price:
+        £@Order.GetFormattedTotalPrice()
+    </strong>
+</p>
+
+@code {
+    [Parameter] public Order Order { get; set; }
+}

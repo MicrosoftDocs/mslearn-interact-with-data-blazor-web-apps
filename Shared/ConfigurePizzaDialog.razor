@@ -8,8 +8,11 @@
         </div>
         <form class="dialog-body">
             <div>
-                <label>Size:</label>
-                <input type="range" min="@Pizza.MinimumSize" max="@Pizza.MaximumSize" step="1" @bind="Pizza.Size" @bind:event="oninput" />
+                @if (supportSizing)
+                {
+                    <label>Size:</label>
+                    <input type="range" min="@Pizza.MinimumSize" max="@Pizza.MaximumSize"step="1" @bind="Pizza.Size" @bind:event="oninput" />
+                }
                 <span class="size-label">
                     @(Pizza.Size)" (£@(Pizza.GetFormattedTotalPrice()))
                 </span>
@@ -17,11 +20,11 @@
         </form>
 
         <div class="dialog-buttons">
-            <button class="btn btn-secondary mr-auto" @onclick="OnCancel">Cancel</button>
+            <button class="btn btn-secondary me-auto" @onclick="OnCancel">Cancel</button>
             <span class="mr-center">
                 Price: <span class="price">@(Pizza.GetFormattedTotalPrice())</span>
             </span>
-            <button class="btn btn-success ml-auto" @onclick="OnConfirm">Order ></button>
+            <button class="btn btn-success ms-auto" @onclick="OnConfirm">Order ></button>
         </div>
     </div>
 </div>
@@ -30,4 +33,15 @@
     [Parameter] public Pizza Pizza { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
     [Parameter] public EventCallback OnConfirm { get; set; }
+
+    bool supportSizing = true;
+
+    protected override void OnInitialized()
+    {
+        if (Pizza is { Special.FixedSize: not null })
+        {
+            Pizza.Size = Pizza.Special.FixedSize.Value;
+            supportSizing = false;
+        }
+    }
 }

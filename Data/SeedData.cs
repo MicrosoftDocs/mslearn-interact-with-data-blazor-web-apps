@@ -61,6 +61,15 @@
                 BasePrice = 9.99m,
                 ImageUrl = "img/pizzas/margherita.jpg",
             },
+            new PizzaSpecial()
+            {
+                Id = 9,
+                Name = "Margherita Family Size",
+                Description = "24\" of pure tomatoes and basil",
+                BasePrice = 14.99m,
+                ImageUrl = "img/pizzas/margherita.jpg",
+                FixedSize = 24
+            },
             };
             db.Specials.AddRange(specials);
             db.SaveChanges();

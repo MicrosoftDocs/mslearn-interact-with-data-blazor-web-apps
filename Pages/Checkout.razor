@@ -3,48 +3,69 @@
 @inject OrderState OrderState
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
+@implements IDisposable
 @layout MainLayout
 
 <div class="main">
-    <div class="checkout-cols">
-        <div class="checkout-order-details">
-            <h4>Review order</h4>
-            @foreach (var pizza in Order.Pizzas)
-            {
-                <p>
-                    <strong>
-                        @(pizza.Size)"
-                        @pizza.Special.Name
-                        (£@pizza.GetFormattedTotalPrice())
-                    </strong>
-                </p>
-            }
+    <EditForm EditContext=editContext OnValidSubmit=PlaceOrder>
+        <div class="checkout-cols">
+            <div class="checkout-order-details">
+                <h4>Review order</h4>
+                <OrderReview Order="Order" />
+            </div>
 
-            <p>
-                <strong>
-                    Total price:
-                    £@Order.GetFormattedTotalPrice()
-                </strong>
-            </p>
+            <div class="checkout-delivery-address">
+                <h4>Deliver to...</h4>
+                <div class="checkout-delivery-address">
+                    <h4>Deliver to...</h4>
+                    @if (isError)
+                    {
+                        <div class="alert alert-danger">Please enter a name and address.</div>
+                    }
+                    <AddressEditor Address="Order.DeliveryAddress" />
+                </div>
+            </div>
         </div>
-    </div>
 
-    <button class="checkout-button btn btn-warning" @onclick="PlaceOrder" disabled=@isSubmitting>
-        Place order
-    </button>
+        <button class="checkout-button btn btn-warning" type="Submit" disabled=@isError>
+            Place order
+        </button>
+        <DataAnnotationsValidator />
+    </EditForm>
 </div>
 
 @code {
     Order Order => OrderState.Order;
+    bool isError = false;
+    private EditContext editContext;
 
-    bool isSubmitting;
+    protected override void OnInitialized()
+    {
+        editContext = new(Order.DeliveryAddress);
+        editContext.OnFieldChanged += HandleFieldChanged;
+    }    
+
+    private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        isError = !editContext.Validate();
+        StateHasChanged();
+    }
+   
+    protected void ShowError()
+    {
+        isError = true;
+    }   
+
+    public void Dispose()
+    {
+        editContext.OnFieldChanged -= HandleFieldChanged;
+    }
 
     async Task PlaceOrder()
     {
-        isSubmitting = true;
-        var response = await HttpClient.PostAsJsonAsync($"{NavigationManager.BaseUri}orders", OrderState.Order);
-        var newOrderId = await response.Content.ReadFromJsonAsync<int>();
+        var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "orders", OrderState.Order);
+        var newOrderId= await response.Content.ReadFromJsonAsync<int>();
         OrderState.ResetOrder();
         NavigationManager.NavigateTo($"myorders/{newOrderId}");
-    } 
+    }    
 }
