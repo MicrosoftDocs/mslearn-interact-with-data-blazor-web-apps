@@ -1,54 +1,45 @@
 <div class="form-field">
     <label>Name:</label>
     <div>
-        <input @ref="startName" @bind="Address.Name" />
+        <InputText @bind-Value="Address.Name" />
     </div>
 </div>
 
 <div class="form-field">
     <label>Line 1:</label>
     <div>
-        <input @bind="Address.Line1" />
+        <InputText @bind-Value="Address.Line1" />
     </div>
 </div>
 
 <div class="form-field">
     <label>Line 2:</label>
     <div>
-        <input @bind="Address.Line2" />
+        <InputText @bind-Value="Address.Line2" />
     </div>
 </div>
 
 <div class="form-field">
     <label>City:</label>
     <div>
-        <input @bind="Address.City" />
+        <InputText @bind-Value="Address.City" />
     </div>
 </div>
 
 <div class="form-field">
     <label>Region:</label>
     <div>
-        <input @bind="Address.Region" />
+        <InputText @bind-Value="Address.Region" />
     </div>
 </div>
 
 <div class="form-field">
     <label>Postal code:</label>
     <div>
-        <input @bind="Address.PostalCode" />
+        <InputText @bind-Value="Address.PostalCode" />
     </div>
 </div>
 
 @code {
     [Parameter] public Address Address { get; set; }
-
-    private ElementReference startName;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender) {
-            await startName.FocusAsync();
-        }
-    }
 }
