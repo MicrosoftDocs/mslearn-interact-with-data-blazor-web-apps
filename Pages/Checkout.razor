@@ -24,13 +24,14 @@
         <button class="checkout-button btn btn-warning" disabled=@isSubmitting>
             Place order
         </button>
-        <ValidationSummary />
         <DataAnnotationsValidator />
     </EditForm>
 </div>
 
 @code {
     Order Order => OrderState.Order;
+
+    bool isSubmitting;
     bool isError = false;
 
     async Task PlaceOrder()
